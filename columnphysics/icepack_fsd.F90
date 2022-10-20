@@ -1,5 +1,6 @@
 !=========================================================================
 !
+!
 !  This module contains the subroutines required to define
 !  a floe size distribution tracer for sea ice
 !
@@ -234,6 +235,8 @@
       enddo
 
       if (l_write_diags) then
+         write(*,*) "Floe_rad_c", floe_rad_c
+         write(*,*) "Floe_area_c", floe_area_c
          write(warnstr,*) ' '
          call icepack_warnings_add(warnstr)
          write(warnstr,*) subname
@@ -313,7 +316,6 @@
             totfrac = totfrac + afsd(k)
          enddo
          afsd = afsd/totfrac                    ! normalize
-
       endif ! ice_ic
 
       end subroutine icepack_init_fsd
@@ -755,6 +757,7 @@
             if (SUM(afsdn_latg(:,n)) > puny) then ! fsd exists
 
                if (wave_spec) then
+                  write(*,*) "PatatePatatepatate"
                   if (wave_sig_ht > puny) then
                      call wave_dep_growth (nfsd, wave_spectrum, &
                                            wavefreq, dwavefreq, &
@@ -803,7 +806,7 @@
          endif ! d_an_newi > puny
       endif    ! n = 1
 
-      ! history/diagnostics
+      ! history/diagnostics (add dfsdrad to diagnostic?) patate
       do k = 1, nfsd
          ! sum over n
          d_afsd_latg(k) = d_afsd_latg(k) &
@@ -812,6 +815,13 @@
          d_afsd_newi(k) = d_afsd_newi(k) &
                 + aicen(n)*trcrn(nt_fsd+k-1,n) & ! after latg and newi
                 - area2(n)*afsdn_latg(k,n) ! after latg
+
+!         d_afsd_latg(k) = d_afsd_latg(k) &
+!                + area2(n)/SUM(area2(:))*afsdn_latg(k,n)*floe_rad_c(k) & ! after latg
+!                - aicen_init(n)/SUM(area2(:))*afsdn(k,n)*floe_rad_c(k) ! at start
+!         d_afsd_newi(k) = d_afsd_newi(k) &
+!                + aicen(n)/SUM(aicen(:))*trcrn(nt_fsd+k-1,n)*floe_rad_c(k) & ! after latg and newi
+!                - area2(n)/SUM(aicen(:))*afsdn_latg(k,n)*floe_rad_c(k) ! after latg
       enddo    ! k
 
       end subroutine fsd_add_new_ice
@@ -914,9 +924,9 @@
       ! local variables
       real (kind=dbl_kind), parameter :: &
          aminweld = p1  ! minimum ice concentration likely to weld
-
+!
       real (kind=dbl_kind), parameter :: &
-         c_weld = 1.0e-8_dbl_kind     
+         c_weld = 1.0e-8_dbl_kind      
                         ! constant of proportionality for welding
                         ! total number of floes that weld with another, per square meter,
                         ! per unit time, in the case of a fully covered ice surface
@@ -953,7 +963,7 @@
       afsd_init(:) = c0
       stability    = c0
       prefac       = p5
-
+      
       do n = 1, ncat
 
          d_afsd_weld (:)   = c0

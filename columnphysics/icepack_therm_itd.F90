@@ -1983,7 +1983,6 @@
                                      d_afsd_latg,  d_afsd_newi,   &
                                      d_afsd_latm,  d_afsd_weld,   &
                                      floe_rad_c,   floe_binwidth)
-
       integer (kind=int_kind), intent(in) :: &
          ncat     , & ! number of thickness categories
          nfsd     , & ! number of floe size categories
@@ -2180,7 +2179,6 @@
       !-----------------------------------------------------------------
 
       ! identify ice-ocean cells
-
          call add_new_ice (ncat,          nilyr,        &
                            nfsd,          nblyr,        &
                            n_aero,        dt,           &
@@ -2228,6 +2226,7 @@
                          nbtrcr,    nblyr,         &
                          nfsd,      d_afsd_latm,   &
                          floe_rad_c,floe_binwidth)
+
       if (icepack_warnings_aborted(subname)) return
 
       ! Floe welding during freezing conditions

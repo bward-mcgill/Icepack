@@ -256,6 +256,7 @@
 
       logical (kind=log_kind), public :: &
          calc_strair     = .true.  , & ! if true, calculate wind stress
+         add_strwave     = .false. , &
          formdrag        = .false. , & ! if true, calculate form drag
          highfreq        = .false.     ! if true, calculate high frequency coupling
 
@@ -448,7 +449,7 @@
          albicev_in, albicei_in, albsnowv_in, &
          ahmax_in, R_ice_in, R_pnd_in, R_snw_in, dT_mlt_in, rsnw_mlt_in, &
          kalg_in, kstrength_in, krdg_partic_in, krdg_redist_in, mu_rdg_in, &
-         atmbndy_in, calc_strair_in, formdrag_in, highfreq_in, natmiter_in, &
+         atmbndy_in, calc_strair_in, add_strwave_in, formdrag_in, highfreq_in, natmiter_in, &
          atmiter_conv_in, calc_dragio_in, &
          tfrz_option_in, kitd_in, kcatbound_in, hs0_in, frzpnd_in, &
          floeshape_in, wave_spec_in, wave_spec_type_in, nfreq_in, &
@@ -652,6 +653,7 @@
         
       logical (kind=log_kind), intent(in), optional :: &
          calc_strair_in,     & ! if true, calculate wind stress components
+         add_strwave_in,     & ! if true, add wave radition stress to wind stress.
          formdrag_in,        & ! if true, calculate form drag
          highfreq_in           ! if true, use high frequency coupling
         
@@ -905,6 +907,7 @@
       if (present(mu_rdg_in)            ) mu_rdg           = mu_rdg_in
       if (present(atmbndy_in)           ) atmbndy          = atmbndy_in
       if (present(calc_strair_in)       ) calc_strair      = calc_strair_in
+      if (present(add_strwave_in)       ) add_strwave      = add_strwave_in
       if (present(formdrag_in)          ) formdrag         = formdrag_in
       if (present(highfreq_in)          ) highfreq         = highfreq_in
       if (present(natmiter_in)          ) natmiter         = natmiter_in
@@ -1119,7 +1122,7 @@
          albsnowi_out, ahmax_out, R_ice_out, R_pnd_out, R_snw_out, dT_mlt_out, &
          rsnw_mlt_out, dEdd_algae_out, &
          kalg_out, kstrength_out, krdg_partic_out, krdg_redist_out, mu_rdg_out, &
-         atmbndy_out, calc_strair_out, formdrag_out, highfreq_out, natmiter_out, &
+         atmbndy_out, calc_strair_out, add_strwave_out, formdrag_out, highfreq_out, natmiter_out, &
          atmiter_conv_out, calc_dragio_out, &
          tfrz_option_out, kitd_out, kcatbound_out, hs0_out, frzpnd_out, &
          floeshape_out, wave_spec_out, wave_spec_type_out, nfreq_out, &
@@ -1332,6 +1335,7 @@
         
       logical (kind=log_kind), intent(out), optional :: &
          calc_strair_out,     & ! if true, calculate wind stress components
+         add_strwave_out,     &
          formdrag_out,        & ! if true, calculate form drag
          highfreq_out           ! if true, use high frequency coupling
         
@@ -1625,6 +1629,7 @@
       if (present(mu_rdg_out)            ) mu_rdg_out       = mu_rdg
       if (present(atmbndy_out)           ) atmbndy_out      = atmbndy
       if (present(calc_strair_out)       ) calc_strair_out  = calc_strair
+      if (present(add_strwave_out)       ) add_strwave_out  = add_strwave
       if (present(formdrag_out)          ) formdrag_out     = formdrag
       if (present(highfreq_out)          ) highfreq_out     = highfreq
       if (present(natmiter_out)          ) natmiter_out     = natmiter
@@ -1829,6 +1834,7 @@
         write(iounit,*) "  mu_rdg        = ", mu_rdg
         write(iounit,*) "  atmbndy       = ", atmbndy
         write(iounit,*) "  calc_strair   = ", calc_strair
+        write(iounit,*) "  add_strwave   = ", add_strwave
         write(iounit,*) "  formdrag      = ", formdrag
         write(iounit,*) "  highfreq      = ", highfreq
         write(iounit,*) "  natmiter      = ", natmiter
