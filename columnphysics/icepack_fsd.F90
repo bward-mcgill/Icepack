@@ -757,7 +757,6 @@
             if (SUM(afsdn_latg(:,n)) > puny) then ! fsd exists
 
                if (wave_spec) then
-                  write(*,*) "PatatePatatepatate"
                   if (wave_sig_ht > puny) then
                      call wave_dep_growth (nfsd, wave_spectrum, &
                                            wavefreq, dwavefreq, &
@@ -809,13 +808,14 @@
       ! history/diagnostics (add dfsdrad to diagnostic?) patate
       do k = 1, nfsd
          ! sum over n
+!original
          d_afsd_latg(k) = d_afsd_latg(k) &
                 + area2(n)*afsdn_latg(k,n) & ! after latg
                 - aicen_init(n)*afsdn(k,n) ! at start
          d_afsd_newi(k) = d_afsd_newi(k) &
                 + aicen(n)*trcrn(nt_fsd+k-1,n) & ! after latg and newi
-                - area2(n)*afsdn_latg(k,n) ! after latg
-
+               - area2(n)*afsdn_latg(k,n) ! after latg
+!Test dfsdrad
 !         d_afsd_latg(k) = d_afsd_latg(k) &
 !                + area2(n)/SUM(area2(:))*afsdn_latg(k,n)*floe_rad_c(k) & ! after latg
 !                - aicen_init(n)/SUM(area2(:))*afsdn(k,n)*floe_rad_c(k) ! at start

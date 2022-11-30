@@ -190,7 +190,6 @@
                   wave_spectrum, wavefreq,        dwavefreq, &
                   trcrn,         d_afsd_wave)
 
-
       character (len=char_len), intent(in) :: &
          wave_spec_type   ! type of wave spectrum forcing
 
@@ -256,7 +255,6 @@
          subname='(icepack_step_wavefracture)'
 
       !------------------------------------
-
       ! initialize 
       d_afsd_wave    (:)   = c0
       d_afsdn_wave   (:,:) = c0
@@ -270,7 +268,6 @@
       if ((aice > p01).and.(MAXVAL(wave_spectrum(:)) > puny)) then
 
          hbar = vice / aice
- 
          ! calculate fracture histogram
          call wave_frac(nfsd, nfreq, wave_spec_type, &
                         floe_rad_l, floe_rad_c, &
