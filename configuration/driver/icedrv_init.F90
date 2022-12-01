@@ -97,7 +97,7 @@
          natmiter, kitd, kcatbound
 
       character (len=char_len) :: shortwave, albedo_type, conduct, fbot_xfer_type, &
-         tfrz_option, frzpnd, atmbndy, wave_spec_type, snwredist, snw_aging_table
+         tfrz_option, frzpnd, atmbndy, wave_spec_type, snwredist, snw_aging_table, wave_solver
 
       logical (kind=log_kind) :: sw_redist, use_smliq_pnd, snwgrain
       real (kind=dbl_kind)    :: sw_frac, sw_dtemp
@@ -169,6 +169,7 @@
         formdrag,        highfreq,        natmiter,        &
         atmiter_conv,    calc_dragio,                      &
         tfrz_option,     default_season,  wave_spec_type,  &
+        wave_solver,                                       &
         precip_units,    fyear_init,      ycycle,          &
         atm_data_type,   ocn_data_type,   bgc_data_type,   &
         atm_data_file,   ocn_data_file,   bgc_data_file,   &
@@ -219,14 +220,13 @@
            phi_i_mushy_out=phi_i_mushy, conserv_check_out=conserv_check, &
            tfrz_option_out=tfrz_option, kalg_out=kalg, &
            fbot_xfer_type_out=fbot_xfer_type, puny_out=puny, &
-           wave_spec_type_out=wave_spec_type, &
+           wave_spec_type_out=wave_spec_type, wave_solver_out=wave_solver, &
            sw_redist_out=sw_redist, sw_frac_out=sw_frac, sw_dtemp_out=sw_dtemp, &
            snwredist_out=snwredist, use_smliq_pnd_out=use_smliq_pnd, &
            snwgrain_out=snwgrain, rsnw_fall_out=rsnw_fall, rsnw_tmax_out=rsnw_tmax, &
            rhosnew_out=rhosnew, rhosmin_out = rhosmin, rhosmax_out=rhosmax, &
            windmin_out=windmin, drhosdwind_out=drhosdwind, snwlvlfac_out=snwlvlfac, &
            snw_aging_table_out=snw_aging_table)
-
       call icepack_warnings_flush(nu_diag)
       if (icepack_warnings_aborted()) call icedrv_system_abort(string=subname, &
           file=__FILE__, line=__LINE__)
@@ -266,6 +266,7 @@
                                   ! 'mm_per_sec' = 'mks' = kg/m^2 s
       oceanmixed_ice  = .false.   ! if true, use internal ocean mixed layer
       wave_spec_type  = 'none'    ! type of wave spectrum forcing
+      wave_solver     = 'ml'       ! method of solving wave fracture
       ocn_data_format = 'bin'     ! file format ('bin'=binary or 'nc'=netcdf)
       ocn_data_type   = 'default' ! source of ocean forcing data
       ocn_data_file   = ' '       ! ocean forcing data file
@@ -760,6 +761,7 @@
          write(nu_diag,1010) ' wave_spec                 = ', wave_spec
          if (wave_spec) &
          write(nu_diag,*)    ' wave_spec_type            = ', wave_spec_type
+         write(nu_diag,*)    ' wave_solver               = ', wave_solver
          write(nu_diag,1010) ' l_mpond_fresh             = ', l_mpond_fresh
          write(nu_diag,1005) ' ustar_min                 = ', ustar_min
          write(nu_diag,*)    ' fbot_xfer_type            = ', &
@@ -951,6 +953,7 @@
            phi_i_mushy_in=phi_i_mushy, conserv_check_in=conserv_check, &
            tfrz_option_in=tfrz_option, kalg_in=kalg, &
            fbot_xfer_type_in=fbot_xfer_type, &
+<<<<<<< HEAD
            wave_spec_type_in=wave_spec_type, wave_spec_in=wave_spec, &
            sw_redist_in=sw_redist, sw_frac_in=sw_frac, sw_dtemp_in=sw_dtemp, &
            snwredist_in=snwredist, use_smliq_pnd_in=use_smliq_pnd, &
@@ -958,6 +961,11 @@
            snwgrain_in=snwgrain, rsnw_fall_in=rsnw_fall, rsnw_tmax_in=rsnw_tmax, &
            rhosnew_in=rhosnew, rhosmin_in=rhosmin, rhosmax_in=rhosmax, &
            windmin_in=windmin, drhosdwind_in=drhosdwind, snwlvlfac_in=snwlvlfac)
+=======
+           wave_spec_type_in=wave_spec_type, wave_spec_in=wave_spec,&
+           wave_solver_in=wave_solver, &
+           sw_redist_in=sw_redist, sw_frac_in=sw_frac, sw_dtemp_in=sw_dtemp)
+>>>>>>> 0f0ff3516fabb9516545108809e2fbd592cf0e5b
       call icepack_init_tracer_sizes(ntrcr_in=ntrcr, &
            ncat_in=ncat, nilyr_in=nilyr, nslyr_in=nslyr, nblyr_in=nblyr, &
            nfsd_in=nfsd, n_iso_in=n_iso, n_aero_in=n_aero)

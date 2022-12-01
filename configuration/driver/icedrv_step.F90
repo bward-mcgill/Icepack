@@ -650,7 +650,8 @@
       subroutine step_dyn_wave (dt)
 
       use icedrv_arrays_column, only: wave_spectrum, wave_sig_ht, &
-          d_afsd_wave, floe_rad_l, floe_rad_c, wavefreq, dwavefreq
+          d_afsd_wave, floe_rad_l, floe_binwidth, floe_rad_c, &
+          fracture_hist, wavefreq, dwavefreq
       use icedrv_domain_size, only: ncat, nfsd, nfreq, nx
       use icedrv_state, only: trcrn, aicen, aice, vice
       use icepack_intfc, only: icepack_step_wavefracture
@@ -665,30 +666,36 @@
          ntrcr,           & !
          nbtrcr             !
 
-      character (len=char_len) :: wave_spec_type
+      character (len=char_len) :: wave_spec_type, wave_solver
 
       character(len=*), parameter :: subname = '(step_dyn_wave)'
 
       call icepack_query_parameters(wave_spec_type_out=wave_spec_type)
+      call icepack_query_parameters(wave_solver_out=wave_solver)
       call icepack_warnings_flush(nu_diag)
       if (icepack_warnings_aborted()) call icedrv_system_abort(string=subname, &
              file=__FILE__,line= __LINE__)
 
+      if (wave_spec_type .ne. 'none') then
+
       do i = 1, nx
            d_afsd_wave(i,:) = c0
-           call icepack_step_wavefracture (wave_spec_type=wave_spec_type, &
+           call icepack_step_wavefracture (wave_solver = wave_solver, &
                         dt=dt, ncat=ncat, nfsd=nfsd, nfreq=nfreq, &
                         aice          = aice         (i),      &
                         vice          = vice         (i),      &
                         aicen         = aicen        (i,:),    &
                         floe_rad_l    = floe_rad_l     (:),    &
                         floe_rad_c    = floe_rad_c     (:),    &
+                        floe_binwidth = floe_binwidth  (:),    &
                         wave_spectrum = wave_spectrum(i,:),    &
                         wavefreq      = wavefreq       (:),    &
                         dwavefreq     = dwavefreq      (:),    &
                         trcrn         = trcrn        (i,:,:),  &
-                        d_afsd_wave   = d_afsd_wave  (i,:))
+                        d_afsd_wave   = d_afsd_wave  (i,:),    & 
+                        fracture_hist = fracture_hist(i,:))
       end do ! i
+      end if
 
       call icepack_warnings_flush(nu_diag)
       if (icepack_warnings_aborted()) call icedrv_system_abort(string=subname, &

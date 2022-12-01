@@ -298,6 +298,10 @@
       character (len=char_len), public :: &
          wave_spec_type = 'constant'  ! 'none', 'constant', or 'random'
 
+      character (len=char_len), public :: &
+         wave_solver = 'ml'  ! 'ml', 'std-1iter', 'std-conv'
+
+
 !-----------------------------------------------------------------------
 ! Parameters for melt ponds
 !-----------------------------------------------------------------------
@@ -452,7 +456,8 @@
          atmbndy_in, calc_strair_in, add_strwave_in, formdrag_in, highfreq_in, natmiter_in, &
          atmiter_conv_in, calc_dragio_in, &
          tfrz_option_in, kitd_in, kcatbound_in, hs0_in, frzpnd_in, &
-         floeshape_in, wave_spec_in, wave_spec_type_in, nfreq_in, &
+         floeshape_in, wave_spec_in, &
+         wave_spec_type_in, wave_solver_in, nfreq_in, &
          dpscale_in, rfracmin_in, rfracmax_in, pndaspect_in, hs1_in, hp1_in, &
          bgc_flux_type_in, z_tracers_in, scale_bgc_in, solve_zbgc_in, &
          modal_aero_in, skl_bgc_in, solve_zsal_in, grid_o_in, l_sk_in, &
@@ -692,6 +697,10 @@
       character (len=*), intent(in), optional :: &
          wave_spec_type_in  ! type of wave spectrum forcing 
 
+      character (len=char_len), intent(in), optional :: &
+         wave_solver_in  ! method of wave fracture solution 
+
+
 !-----------------------------------------------------------------------
 ! Parameters for biogeochemistry
 !-----------------------------------------------------------------------
@@ -918,6 +927,7 @@
       if (present(floeshape_in)         ) floeshape        = floeshape_in
       if (present(wave_spec_in)         ) wave_spec        = wave_spec_in
       if (present(wave_spec_type_in)    ) wave_spec_type   = wave_spec_type_in
+      if (present(wave_solver_in)       ) wave_solver      = wave_solver_in
       if (present(nfreq_in)             ) nfreq            = nfreq_in
       if (present(hs0_in)               ) hs0              = hs0_in
       if (present(frzpnd_in)            ) frzpnd           = frzpnd_in
@@ -1125,7 +1135,8 @@
          atmbndy_out, calc_strair_out, add_strwave_out, formdrag_out, highfreq_out, natmiter_out, &
          atmiter_conv_out, calc_dragio_out, &
          tfrz_option_out, kitd_out, kcatbound_out, hs0_out, frzpnd_out, &
-         floeshape_out, wave_spec_out, wave_spec_type_out, nfreq_out, &
+         floeshape_out, wave_spec_out, &
+         wave_spec_type_out, wave_solver_out, nfreq_out, &
          dpscale_out, rfracmin_out, rfracmax_out, pndaspect_out, hs1_out, hp1_out, &
          bgc_flux_type_out, z_tracers_out, scale_bgc_out, solve_zbgc_out, &
          modal_aero_out, skl_bgc_out, solve_zsal_out, grid_o_out, l_sk_out, &
@@ -1373,6 +1384,10 @@
 
       character (len=*), intent(out), optional :: &
          wave_spec_type_out ! type of wave spectrum forcing
+
+      character (len=char_len), intent(out), optional :: &
+         wave_solver_out ! method of wave fracture solution
+
 
 !-----------------------------------------------------------------------
 ! Parameters for biogeochemistry
@@ -1640,6 +1655,7 @@
       if (present(floeshape_out)         ) floeshape_out    = floeshape
       if (present(wave_spec_out)         ) wave_spec_out    = wave_spec
       if (present(wave_spec_type_out)    ) wave_spec_type_out = wave_spec_type
+      if (present(wave_solver_out)       ) wave_solver_out  = wave_solver
       if (present(nfreq_out)             ) nfreq_out        = nfreq
       if (present(hs0_out)               ) hs0_out          = hs0
       if (present(frzpnd_out)            ) frzpnd_out       = frzpnd
@@ -1845,6 +1861,7 @@
         write(iounit,*) "  floeshape     = ", floeshape
         write(iounit,*) "  wave_spec     = ", wave_spec
         write(iounit,*) "  wave_spec_type= ", wave_spec_type
+        write(iounit,*) "  wave_solver   = ", wave_solver
         write(iounit,*) "  nfreq         = ", nfreq
         write(iounit,*) "  hs0           = ", hs0
         write(iounit,*) "  frzpnd        = ", frzpnd
