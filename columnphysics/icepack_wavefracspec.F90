@@ -290,13 +290,14 @@
       fracture_hist  (:)   = c0
 
       wave_sig_ht = 4.0_dbl_kind*SQRT(SUM(wave_spectrum(:)*dwavefreq))
-      
+      hbar = vice / aice
       ! do not try to fracture for minimal ice concentration or Hs < 0.1m
       ! or if all ice is in first floe size category
+
+      ! TEST bward 
+!      if ((.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)).and.((aice > p01))) then
       if ((.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)).and.((aice > p01).and.(wave_sig_ht.gt.0.1))) then
          
-          hbar = vice / aice
-
           ! Options are wave_solver = ml or wave_solver = stdconv or wave_solver = std1iter
           if (trim(wave_solver).eq.'ml') then
 
@@ -794,8 +795,12 @@
 
       real (kind=dbl_kind), dimension(13102)   :: filelist
  
+      ! Patate
+!      wave_class_file = &
+!       trim('/glade/u/home/lettier/wavefrac_nn_classifier_v9.txt')
+
       wave_class_file = &
-       trim('/glade/u/home/lettier/wavefrac_nn_classifier_v9.txt')
+       trim('/storage/bward/cice-dirs/input/waveml/wavefrac_nn_classifier_202201.txt')
 
       open (unit = 1, file = wave_class_file)
       read (1, *) filelist
@@ -882,8 +887,12 @@
 
       real (kind=dbl_kind), dimension(44412)   :: filelist
 
+      ! Patate
       wave_fullnet_file = &
-       trim('/glade/u/home/lettier/wavefrac_nn_fullnet_v8.txt')
+       trim('/storage/bward/cice-dirs/input/waveml/wavefrac_nn_fullnet_202201.txt')
+
+!      wave_fullnet_file = &
+!       trim('/glade/u/home/lettier/wavefrac_nn_fullnet_v8.txt')
 
       open (unit = 2, file = wave_fullnet_file)
       read (2, *) filelist

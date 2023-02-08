@@ -757,8 +757,8 @@
                      call wave_dep_growth (nfsd, wave_spectrum, &
                                            wavefreq, dwavefreq, &
                                            new_size)
-                     if (icepack_warnings_aborted(subname)) return
-                  end if
+                  if (icepack_warnings_aborted(subname)) return
+                  end if 
 
                   ! grow in new_size category
                   afsd_ni(new_size) = (afsdn_latg(new_size,n)*area2(n) + ai0new) &
@@ -769,7 +769,6 @@
                   do k = new_size+1, nfsd  ! diminish other floe cats accordingly
                      afsd_ni(k) = afsdn_latg(k,n)*area2(n) / (area2(n) + ai0new)
                   end do
-
                else ! grow in smallest floe size category
                   afsd_ni(1) = (afsdn_latg(1,n)*area2(n) + ai0new) &
                                              / (area2(n) + ai0new)
@@ -782,6 +781,7 @@
 
                if (wave_spec) then
                   if (wave_sig_ht > puny) then
+                 
                      call wave_dep_growth (nfsd, wave_spectrum, &
                                            wavefreq, dwavefreq, &
                                            new_size)

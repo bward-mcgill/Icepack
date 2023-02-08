@@ -289,7 +289,6 @@
                                   zSin,              &
                                   einit )
       if (icepack_warnings_aborted(subname)) return
-
       ! Save initial ice and snow thickness (for fresh and fsalt)
       worki = hin
       works = hsn
@@ -323,7 +322,6 @@
                                               fadvocn,   snoice,    &
                                               smice,     smliq)
             if (icepack_warnings_aborted(subname)) return
-
             ! reinitialize mass in case of snow-ice formation
             if (snwgrain) then
                massice(:) = smice(:) * hslyr
@@ -349,7 +347,6 @@
                                      fcondtopn, fcondbotn,  &
                                      einit                 )
             if (icepack_warnings_aborted(subname)) return
-
          endif ! ktherm
             
       else
