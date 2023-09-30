@@ -296,8 +296,8 @@
       ! do not try to fracture for minimal ice concentration or Hs < 0.1m
       ! or if all ice is in first floe size category
 
-      if ((.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)).and.((aice > p01).and.(wave_sig_ht.gt.puny))) then
-!      if ((.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)).and.((aice > p01).and.(wave_sig_ht.gt.0.1))) then        
+      ! if ((.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)).and.((aice > p01).and.(wave_sig_ht.gt.puny))) then
+     if ((.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)).and.((aice > p01).and.(wave_sig_ht.gt.0.1))) then        
           ! Options are wave_solver = ml or wave_solver = stdconv or wave_solver = std1iter
           if (trim(wave_solver).eq.'ml') then
 
