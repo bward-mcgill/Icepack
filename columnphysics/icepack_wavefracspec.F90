@@ -239,8 +239,7 @@
          dwavefreq       ! wave frequency bin widths (s^-1)
 
       real (kind=dbl_kind), dimension(:), intent(in) :: &
-         wave_spectrum   ! ocean surface wave spectrum as a function of frequency
-                         ! power spectral density of surface elevation, E(f) (units m^2 s)
+         wave_spectrum   ! ocean surface wave spectrum as a function of frequency power spectral density of surface elevation, E(f) (units m^2 s)
 
       real (kind=dbl_kind), dimension(:,:), intent(inout) :: &
          trcrn           ! tracer array
@@ -266,6 +265,9 @@
 
       real (kind=dbl_kind), dimension (nfsd, nfsd) :: &
          frac
+
+      real (kind=dbl_kind), dimension(nfreq):: &
+         filt_wave_spectrum ! filtered wave spectrum, high frequency wave cannot break
 
       real (kind=dbl_kind) :: &
          wave_sig_ht, & !
@@ -294,10 +296,8 @@
       ! do not try to fracture for minimal ice concentration or Hs < 0.1m
       ! or if all ice is in first floe size category
 
-      ! TEST bward 
-!      if ((.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)).and.((aice > p01))) then
-      if ((.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)).and.((aice > p01).and.(wave_sig_ht.gt.0.1))) then
-         
+      if ((.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)).and.((aice > p01).and.(wave_sig_ht.gt.puny))) then
+!      if ((.NOT. ALL(trcrn(nt_fsd,:).ge.c1-puny)).and.((aice > p01).and.(wave_sig_ht.gt.0.1))) then        
           ! Options are wave_solver = ml or wave_solver = stdconv or wave_solver = std1iter
           if (trim(wave_solver).eq.'ml') then
 
@@ -307,15 +307,21 @@
               ! output: spwf_classifier_out between 0 and 1
               ! if greater than some critical value, run ML wave fracture
               ! otherwise, frac hist is zero
+              
+              ! Test bward filter high frequency for wave fracture.
+              filt_wave_spectrum=wave_spectrum
+!              filt_wave_spectrum(nfreq-11:nfreq) = 0
+!
+!              write(*,*) "The associated WL:",gravit/(c2*pi*wavefreq (nfreq-11:nfreq)**2)
 
-              call spwf_classifier(wave_spectrum, & 
+              call spwf_classifier(filt_wave_spectrum, & 
                               hbar, aice, &
                               spwf_classifier_out)
 
               if (spwf_classifier_out.lt.spwf_clss_crit) then
                   fracture_hist(:) = c0
               else
-                  call spwf_fullnet(nfsd, floe_rad_l, floe_binwidth, wave_spectrum, &
+                  call spwf_fullnet(nfsd, floe_rad_l, floe_binwidth, filt_wave_spectrum, &
                           hbar, aice, &
                           fracture_hist)
               end if
@@ -699,7 +705,7 @@
          if (is_min(j).or.is_max(j)) is_extremum(j) = .true.
       end do
 
-      ! loop over points
+      ! loop over pointsd
       ! nothing can happen at the first or last
       do j = 2, nx-1
          if (is_extremum(j)) then
